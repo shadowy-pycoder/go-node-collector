@@ -21,8 +21,8 @@ For now, only Ubuntu-based distributions are supported.
 package main
 
 import (
-    "context"
-    "fmt"
+	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
