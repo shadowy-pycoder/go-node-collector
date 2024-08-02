@@ -15,10 +15,13 @@
 package collector
 
 import (
+	"fmt"
+	"slices"
 	"sync"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"golang.org/x/exp/maps"
 )
 
 // Namespace defines the common namespace to be used by all metrics.
@@ -52,9 +55,22 @@ type NodeCollector struct {
 }
 
 // NewNodeCollector creates a new NodeCollector.
-func NewNodeCollector() (*NodeCollector, error) {
+func NewNodeCollector(filters ...string) (*NodeCollector, error) {
+	f := make(map[string]bool)
+	for _, filter := range filters {
+		_, exist := collectorState[filter]
+		if !exist {
+			supportedColectors := maps.Keys(collectorState)
+			slices.Sort(supportedColectors)
+			return nil, fmt.Errorf("missing collector: %s. possibele values: %s", filter, supportedColectors)
+		}
+		f[filter] = true
+	}
 	collectors := make(map[string]Collector)
 	for key := range collectorState {
+		if len(f) > 0 && !f[key] {
+			continue
+		}
 		collector, err := factories[key]()
 		if err != nil {
 			return nil, err

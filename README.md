@@ -7,14 +7,15 @@ This library is a modification heavily based on [Prometheus Node Exporter](https
 
 For now, only Ubuntu-based distributions are supported.
 
-# Supported metrics
+# Supported Collectors
 
-- CPU Usage
-- CPU Frequency
-- Disk Usage
-- Disk Stats
-- Memory Usage
-- Thermal Throttle
+- cpu | Exposes CPU statistics
+- cpufreq | Exposes CPU frequency statistics
+- diskstats | Exposes disk I/O statistics
+- filesystem | Exposes filesystem statistics, such as disk space used
+- meminfo | Exposes memory statistics
+- systemd | Exposes systemd statistics
+- thermal_zone | Exposes thermal zone & cooling device statistics from `/sys/class/thermal`
 
 # Usage
 ```go
@@ -37,6 +38,8 @@ import (
 
 func main() {
 	nc, err := collector.NewNodeCollector()
+	// By default, it gathers all metrics, but specific collectors can be selected 
+	// Example: nc, err := collector.NewNodeCollector("cpu", "systemd")
 	if err != nil {
 		log.Fatal(err)
 	}
