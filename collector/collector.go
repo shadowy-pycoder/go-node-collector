@@ -62,7 +62,7 @@ func NewNodeCollector(filters ...string) (*NodeCollector, error) {
 		if !exist {
 			supportedColectors := maps.Keys(collectorState)
 			slices.Sort(supportedColectors)
-			return nil, fmt.Errorf("missing collector: %s. possibele values: %s", filter, supportedColectors)
+			return nil, fmt.Errorf("missing collector: %s. possible values: %s", filter, supportedColectors)
 		}
 		f[filter] = true
 	}
